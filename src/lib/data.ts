@@ -55,7 +55,7 @@ const TEMPLATE: [phaseId: string, title: string, daysBefore: number, priority: P
   ["p0", "Competitor teardown: price per oz, claims, packaging", 165, "p2"],
   ["p0", "Trademark and domain check for \"Salicare\"", 160, "p1"],
   ["p0", "Brand identity: logo, palette, voice", 140, "p2"],
-  ["p0", "Decide fluoride (OTC drug) or fluoride-free (cosmetic)", 158, "p1"],
+  ["p0", "Confirm fluoride-free formula and cosmetic-only claims", 158, "p1"],
   ["p1", "Write product brief: actives, flavour, abrasiveness, SLS-free", 150, "p1"],
   ["p1", "Send RFQ to 3–5 contract manufacturers", 145, "p1"],
   ["p1", "Sign NDA and quality agreement with manufacturer", 130, "p2"],
@@ -64,12 +64,13 @@ const TEMPLATE: [phaseId: string, title: string, daysBefore: number, priority: P
   ["p2", "Start accelerated + real-time stability testing", 100, "p1"],
   ["p2", "Tube compatibility test", 95, "p2"],
   ["p2", "Preservative efficacy and microbial tests", 90, "p2"],
-  ["p2", "Fluoride assay and availability test (if OTC)", 85, "p2"],
   ["p2", "Consumer in-use panel", 75, "p3"],
-  ["p3", "Confirm M021 monograph compliance or MoCRA listing", 80, "p1"],
-  ["p3", "Get NDC labeler code and drug listing (if OTC)", 70, "p1"],
-  ["p3", "Drug Facts / label legal review", 65, "p1"],
-  ["p3", "Build claims substantiation file", 60, "p2"],
+  ["p3", "Claims review: keep to cosmetic claims (no anticavity, whitening-as-drug or gum disease claims)", 80, "p1"],
+  ["p3", "MoCRA: confirm manufacturer's FDA facility registration", 75, "p1"],
+  ["p3", "MoCRA: submit cosmetic product listing to FDA", 50, "p1"],
+  ["p3", "Safety substantiation file (ingredient safety, stability, micro results)", 60, "p1"],
+  ["p3", "Cosmetic label review: INCI ingredients, net quantity, distributor, adverse-event contact", 65, "p1"],
+  ["p3", "Build marketing claims substantiation file (FTC)", 55, "p2"],
   ["p3", "Product liability insurance", 45, "p2"],
   ["p4", "Choose tube (laminate / mono-material) and carton", 110, "p2"],
   ["p4", "Dielines and artwork", 90, "p1"],
@@ -80,13 +81,13 @@ const TEMPLATE: [phaseId: string, title: string, daysBefore: number, priority: P
   ["p5", "QC release specs and Certificate of Analysis review", 25, "p1"],
   ["p5", "3PL / Amazon FBA logistics plan", 35, "p2"],
   ["p6", "Shopify store and product page", 40, "p2"],
-  ["p6", "Amazon Brand Registry and listing (check OTC gating)", 30, "p2"],
+  ["p6", "Amazon Brand Registry and listing", 30, "p2"],
   ["p6", "Product photography and content", 35, "p3"],
   ["p7", "Pre-launch waitlist and email sequence", 45, "p2"],
   ["p7", "Dentist and influencer seeding", 20, "p2"],
   ["p7", "Launch-day campaign and paid ads", 0, "p1"],
   ["p8", "Set reorder points and inventory alerts", -14, "p2"],
-  ["p8", "Monitor reviews and adverse-event reports", -30, "p2"],
+  ["p8", "Monitor reviews; report serious adverse events to FDA within 15 days (MoCRA)", -30, "p2"],
 ];
 
 export function addDays(iso: string, days: number): string {
@@ -112,14 +113,14 @@ export function daysBetween(fromIso: string, toIso: string): number {
   return Math.round((b - a) / 86_400_000);
 }
 
-/** Builds the starter task list, marking tasks already past due as done. */
+/** Builds the fluoride-free (cosmetic) starter task list, marking tasks already past due as done. */
 export function buildTemplate(launchDate: string): Task[] {
   const today = todayISO();
-  return TEMPLATE.map(([phaseId, title, daysBefore, priority], i) => {
+  return TEMPLATE.map(([phaseId, title, daysBefore, priority]) => {
     const due = addDays(launchDate, -daysBefore);
     const past = due < today;
     return {
-      id: `t${i + 1}`,
+      id: crypto.randomUUID(),
       title,
       phaseId,
       priority,
