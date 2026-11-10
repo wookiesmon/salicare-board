@@ -1,16 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Plus } from "lucide-react";
 import { formatDate, PHASES, STATUSES, type Status } from "@/lib/data";
 import { useStore } from "@/lib/store";
 import { useTaskPanel } from "@/components/task-panel";
-import { inputClass, OverduePill, PageHeader, PriorityPill, StatusPill } from "@/components/ui";
+import { buttonClass, inputClass, OverduePill, PageHeader, PriorityPill, StatusPill } from "@/components/ui";
 import { cn } from "@/lib/utils";
 
 export default function ListPage() {
   const { tasks, updateTask } = useStore();
-  const { openTask } = useTaskPanel();
+  const { openTask, openNew } = useTaskPanel();
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState<"all" | "open" | Status>("open");
 
@@ -32,6 +32,9 @@ export default function ListPage() {
             <option key={s.id} value={s.id}>{s.label}</option>
           ))}
         </select>
+        <button className={buttonClass} onClick={() => openNew()}>
+          <Plus className="size-4" /> New task
+        </button>
       </PageHeader>
 
       <div className="overflow-x-auto rounded-xl border border-line bg-surface">

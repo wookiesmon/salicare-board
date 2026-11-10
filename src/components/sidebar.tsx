@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { CalendarDays, CheckSquare, Columns3, Factory, GanttChart, Home, List, Settings, ShieldCheck } from "lucide-react";
+import { CalendarDays, CheckSquare, Columns3, Factory, GanttChart, Home, List, Plus, Settings, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTaskPanel } from "./task-panel";
 
 const MAIN = [
   { href: "/", label: "Home", icon: Home },
@@ -27,6 +28,7 @@ const MOBILE = [MAIN[0], MAIN[1], MAIN[2], ...RECORDS, { href: "/settings", labe
 
 export function Sidebar() {
   const path = usePathname();
+  const { openNew } = useTaskPanel();
   return (
     <>
       {/* Desktop sidebar */}
@@ -35,6 +37,15 @@ export function Sidebar() {
           <span className="size-5 rounded-md bg-gradient-to-br from-accent to-[#7fe0cf]" aria-hidden />
           Salicare
         </Link>
+        <button
+          onClick={() => openNew()}
+          className="mb-3 flex items-center justify-between rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-accent-fg hover:opacity-90"
+        >
+          <span className="flex items-center gap-2">
+            <Plus className="size-4" aria-hidden /> New task
+          </span>
+          <kbd className="rounded border border-accent-fg/40 px-1 font-mono text-[10px]">C</kbd>
+        </button>
         {MAIN.map(({ href, label, icon: Icon }) => {
           const on = href === "/" ? path === "/" : path.startsWith(href);
           return (
@@ -83,6 +94,15 @@ export function Sidebar() {
           Settings
         </Link>
       </aside>
+
+      {/* Mobile: floating add button above the tab bar */}
+      <button
+        onClick={() => openNew()}
+        aria-label="New task"
+        className="fixed right-[max(16px,env(safe-area-inset-right))] bottom-[calc(4.5rem+env(safe-area-inset-bottom))] z-20 flex size-14 items-center justify-center rounded-full bg-accent text-accent-fg shadow-lg md:hidden"
+      >
+        <Plus className="size-6" aria-hidden />
+      </button>
 
       {/* Mobile bottom tab bar */}
       <nav className="fixed inset-x-0 bottom-0 z-20 flex justify-around border-t border-line bg-surface pb-[env(safe-area-inset-bottom)] md:hidden">

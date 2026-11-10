@@ -1,13 +1,14 @@
 "use client";
 
+import { Plus } from "lucide-react";
 import { addDays, formatDate, isOverdue, todayISO, type Task } from "@/lib/data";
 import { useStore } from "@/lib/store";
 import { useTaskPanel } from "@/components/task-panel";
-import { PageHeader, Panel, PhasePill, PriorityPill, StatusPill } from "@/components/ui";
+import { buttonClass, PageHeader, Panel, PhasePill, PriorityPill, StatusPill } from "@/components/ui";
 
 export default function MyTasksPage() {
   const { tasks, updateTask } = useStore();
-  const { openTask } = useTaskPanel();
+  const { openTask, openNew } = useTaskPanel();
   const today = todayISO();
   const weekEnd = addDays(today, 7);
 
@@ -21,7 +22,11 @@ export default function MyTasksPage() {
 
   return (
     <>
-      <PageHeader title="My Tasks" subtitle={`${open.length} open tasks`} />
+      <PageHeader title="My Tasks" subtitle={`${open.length} open tasks`}>
+        <button className={buttonClass} onClick={() => openNew()}>
+          <Plus className="size-4" /> New task
+        </button>
+      </PageHeader>
       {groups.map((g) =>
         g.items.length ? (
           <Panel key={g.title} title={g.title} aside={String(g.items.length)}>
