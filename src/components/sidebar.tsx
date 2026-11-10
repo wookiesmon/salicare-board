@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { CalendarDays, CheckSquare, Columns3, FlaskConical, GanttChart, Home, List, Settings } from "lucide-react";
+import { CalendarDays, CheckSquare, Columns3, Factory, GanttChart, Home, List, Settings, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const MAIN = [
@@ -12,11 +12,18 @@ const MAIN = [
   { href: "/list", label: "List", icon: List },
 ];
 
+const RECORDS = [
+  { href: "/suppliers", label: "Suppliers", icon: Factory },
+  { href: "/regulatory", label: "Regulatory", icon: ShieldCheck },
+];
+
 const SOON = [
   { label: "Timeline", icon: GanttChart },
   { label: "Calendar", icon: CalendarDays },
-  { label: "Records", icon: FlaskConical },
 ];
+
+// The phone tab bar leaves out List to fit; it is reachable from the desktop sidebar.
+const MOBILE = [MAIN[0], MAIN[1], MAIN[2], ...RECORDS, { href: "/settings", label: "Settings", icon: Settings }];
 
 export function Sidebar() {
   const path = usePathname();
@@ -44,6 +51,20 @@ export function Sidebar() {
             </Link>
           );
         })}
+        <p className="mt-5 px-2 pb-1 font-mono text-[10.5px] tracking-widest text-muted uppercase">Records</p>
+        {RECORDS.map(({ href, label, icon: Icon }) => (
+          <Link
+            key={href}
+            href={href}
+            className={cn(
+              "flex items-center gap-2.5 rounded-md px-2 py-1.5 text-sm text-muted hover:text-fg",
+              path.startsWith(href) && "border border-line bg-surface font-semibold text-fg",
+            )}
+          >
+            <Icon className="size-4" aria-hidden />
+            {label}
+          </Link>
+        ))}
         <p className="mt-5 px-2 pb-1 font-mono text-[10.5px] tracking-widest text-muted uppercase">Coming next</p>
         {SOON.map(({ label, icon: Icon }) => (
           <span key={label} className="flex items-center gap-2.5 px-2 py-1.5 text-sm text-muted/70">
@@ -65,10 +86,10 @@ export function Sidebar() {
 
       {/* Mobile bottom tab bar */}
       <nav className="fixed inset-x-0 bottom-0 z-20 flex justify-around border-t border-line bg-surface pb-[env(safe-area-inset-bottom)] md:hidden">
-        {[...MAIN, { href: "/settings", label: "Settings", icon: Settings }].map(({ href, label, icon: Icon }) => {
+        {MOBILE.map(({ href, label, icon: Icon }) => {
           const on = href === "/" ? path === "/" : path.startsWith(href);
           return (
-            <Link key={href} href={href} className={cn("flex min-h-14 flex-1 flex-col items-center justify-center gap-0.5 text-[11px] text-muted", on && "text-accent")}>
+            <Link key={href} href={href} className={cn("flex min-h-14 min-w-0 flex-1 flex-col items-center justify-center gap-0.5 text-[10.5px] text-muted", on && "text-accent")}>
               <Icon className="size-5" aria-hidden />
               {label}
             </Link>

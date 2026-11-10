@@ -15,7 +15,8 @@ Then open http://localhost:3000. Press `C` anywhere to add a task.
 
 - [x] Steps 1–2: app shell, fluoride-free launch template (37 tasks, 9 phases), Home, My Tasks, Board (drag and drop), List, Settings
 - [x] Steps 3–4: Supabase email login, workspaces and tasks in Postgres with row-level security (`supabase/migrations/`)
-- [ ] Steps 5–7: records (suppliers, formulas, tests, regulatory), timeline, calendar, Cmd-K
+- [x] Step 5: records — Suppliers (with quotes) and Regulatory pages
+- [ ] Steps 6–7: formulas and tests records, timeline, calendar, Cmd-K
 - [ ] Steps 8–9: Google Docs and KakaoTalk integrations, daily reminder
 - [ ] Step 10: security pass, tests, deploy checklist
 

@@ -51,6 +51,7 @@ type Store = {
   tasks: Task[];
   error: string | null;
   clearError: () => void;
+  reportError: (what: string, message: string) => void;
   addTask: (t: Omit<Task, "id">) => void;
   updateTask: (id: string, patch: Partial<Task>) => void;
   moveTask: (id: string, status: Status) => void;
@@ -165,6 +166,7 @@ export function StoreProvider({
         tasks,
         error,
         clearError: () => setError(null),
+        reportError: fail,
         addTask,
         updateTask,
         moveTask,
